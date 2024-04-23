@@ -1,7 +1,10 @@
 package com.betrybe.alexandria.service;
 
 import com.betrybe.alexandria.entity.Book;
+import com.betrybe.alexandria.entity.BookDetail;
+import com.betrybe.alexandria.exception.BookDetailNotFoundException;
 import com.betrybe.alexandria.exception.BookNotFoundException;
+import com.betrybe.alexandria.repository.BookDetailRepository;
 import com.betrybe.alexandria.repository.BookRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,9 @@ import org.springframework.stereotype.Service;
 public class BookService {
   @Autowired
   private BookRepository repository;
+
+  @Autowired
+  private BookDetailRepository detailRepository;
 
   public Book findById(Long id) {
     return repository.findById(id)
@@ -40,6 +46,44 @@ public class BookService {
     repository.deleteById(id);
 
     return book;
+  }
+
+  public BookDetail createDetail(Long bookId, BookDetail bookDetail) {
+    Book book = findById(bookId);
+    bookDetail.setBook(book);
+    return detailRepository.save(bookDetail);
+  }
+
+  public BookDetail getBookDetail(Long bookId) {
+    Book book = findById(bookId);
+    BookDetail bookDetail = book.getDetail();
+    if (bookDetail == null) {
+      throw new BookDetailNotFoundException();
+    }
+    return bookDetail;
+  }
+
+  public BookDetail updateDetail(Long bookId, BookDetail bookDetail) {
+    BookDetail bookDetailDb = getBookDetail(bookId);
+    bookDetailDb.setSummary(bookDetail.getSummary());
+    bookDetailDb.setPageCount(bookDetail.getPageCount());
+    bookDetailDb.setYear(bookDetail.getYear());
+    bookDetailDb.setIsbn(bookDetail.getIsbn());
+
+    return detailRepository.save(bookDetailDb);
+  }
+
+  public BookDetail deleteDetail(Long bookId) {
+    Book book = findById(bookId);
+    BookDetail bookDetail = book.getDetail();
+    if (bookDetail == null) {
+      throw new BookDetailNotFoundException();
+    }
+    book.setDetail(null);
+    bookDetail.setBook(null);
+    detailRepository.delete(bookDetail);
+
+    return bookDetail;
   }
 
 }

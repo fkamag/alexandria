@@ -23,6 +23,11 @@ public class GeneralControllerAdvice {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
   }
 
+  @ExceptionHandler
+  public ResponseEntity<String> handleBookDetailNotFound(BookDetailNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+  }
+
 
 
 }

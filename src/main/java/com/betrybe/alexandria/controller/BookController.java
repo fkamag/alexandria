@@ -1,6 +1,8 @@
 package com.betrybe.alexandria.controller;
 
 import com.betrybe.alexandria.controller.dto.BookCreationDto;
+import com.betrybe.alexandria.controller.dto.BookDetailCreationDto;
+import com.betrybe.alexandria.controller.dto.BookDetailDto;
 import com.betrybe.alexandria.controller.dto.BookDto;
 import com.betrybe.alexandria.entity.Book;
 import com.betrybe.alexandria.service.BookService;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -60,6 +63,38 @@ public class BookController {
   public ResponseEntity<BookDto> deleteById(@PathVariable Long id) {
     BookDto bookDto = BookDto.fromEntity(service.deleteById(id));
     return ResponseEntity.status(HttpStatus.OK).body(bookDto);
+  }
+
+  @PostMapping("/{bookId}/detail")
+  @ResponseStatus(HttpStatus.CREATED)
+  public BookDetailDto createDetail(@PathVariable Long bookId,
+      @RequestBody BookDetailCreationDto bookDetailCreationDto) {
+    return BookDetailDto.fromEntity(
+        service.createDetail(bookId, bookDetailCreationDto.toEntity())
+    );
+  }
+
+  @GetMapping("/{bookId}/detail")
+  public BookDetailDto getBookDetail(@PathVariable Long bookId) {
+    return BookDetailDto.fromEntity(
+        service.getBookDetail(bookId)
+    );
+  }
+
+  @PutMapping("/{bookId}/detail")
+  public ResponseEntity<BookDetailDto> updateDetail(@PathVariable Long bookId,
+      @RequestBody BookDetailCreationDto bookDetailCreationDto) {
+    BookDetailDto bookDetailDto =BookDetailDto.fromEntity(
+        service.updateDetail(bookId, bookDetailCreationDto.toEntity())
+    );
+    return ResponseEntity.status(HttpStatus.OK).body(bookDetailDto);
+  }
+
+  @DeleteMapping("/{bookId}/detail")
+  public BookDetailDto deleteDetail(@PathVariable Long bookId) {
+    return BookDetailDto.fromEntity(
+        service.deleteDetail(bookId)
+    );
   }
 
 }
