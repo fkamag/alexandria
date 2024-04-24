@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,8 +36,11 @@ public class BookController {
   }
 
   @GetMapping
-  public ResponseEntity<List<BookDto>> findAll() {
-    List<Book> books = service.findAll();
+  public ResponseEntity<List<BookDto>> findAll(
+      @RequestParam(required = false, defaultValue = "0") int pageNumber,
+      @RequestParam(required = false, defaultValue = "20") int pageSize
+  ) {
+    List<Book> books = service.findAll(pageNumber, pageSize);
     List<BookDto> bookDtos = books.stream()
         .map(BookDto::fromEntity)
         .toList();
