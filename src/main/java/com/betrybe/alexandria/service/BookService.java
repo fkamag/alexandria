@@ -2,6 +2,7 @@ package com.betrybe.alexandria.service;
 
 import com.betrybe.alexandria.entity.Book;
 import com.betrybe.alexandria.entity.BookDetail;
+import com.betrybe.alexandria.entity.Publisher;
 import com.betrybe.alexandria.exception.BookDetailNotFoundException;
 import com.betrybe.alexandria.exception.BookNotFoundException;
 import com.betrybe.alexandria.repository.BookDetailRepository;
@@ -17,6 +18,9 @@ public class BookService {
 
   @Autowired
   private BookDetailRepository detailRepository;
+
+  @Autowired
+  private PublisherService publisherService;
 
   public Book findById(Long id) {
     return repository.findById(id)
@@ -84,6 +88,23 @@ public class BookService {
     detailRepository.delete(bookDetail);
 
     return bookDetail;
+  }
+
+  public Book setBookPublisher(Long bookId, Long publisherId) {
+    Book book = findById(bookId);
+    Publisher publisher = publisherService.findById(publisherId);
+
+    book.setPublisher(publisher);
+
+    return repository.save(book);
+  }
+
+  public Book removeBookPublisher(Long bookId) {
+    Book book = findById(bookId);
+
+    book.setPublisher(null);
+
+    return repository.save(book);
   }
 
 }
