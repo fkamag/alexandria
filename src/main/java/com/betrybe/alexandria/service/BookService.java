@@ -1,5 +1,6 @@
 package com.betrybe.alexandria.service;
 
+import com.betrybe.alexandria.entity.Author;
 import com.betrybe.alexandria.entity.Book;
 import com.betrybe.alexandria.entity.BookDetail;
 import com.betrybe.alexandria.entity.Publisher;
@@ -21,6 +22,9 @@ public class BookService {
 
   @Autowired
   private PublisherService publisherService;
+
+  @Autowired
+  private AuthorService authorService;
 
   public Book findById(Long id) {
     return repository.findById(id)
@@ -103,6 +107,24 @@ public class BookService {
     Book book = findById(bookId);
 
     book.setPublisher(null);
+
+    return repository.save(book);
+  }
+
+  public Book addBookAuthor(Long bookId, Long authorId) {
+    Book book = findById(bookId);
+    Author author = authorService.findById(authorId);
+
+    book.getAuthors().add(author);
+
+    return repository.save(book);
+  }
+
+  public Book removeBookAuthor(Long bookId, Long authorId) {
+    Book book = findById(bookId);
+    Author author = authorService.findById(authorId);
+
+    book.getAuthors().remove(author);
 
     return repository.save(book);
   }

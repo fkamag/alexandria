@@ -107,4 +107,14 @@ public class BookController {
     return BookDto.fromEntity(service.removeBookPublisher(bookId));
   }
 
+  @PutMapping("/{bookId}/authors/{authorId}")
+  public BookDto addBookAuthor(@PathVariable Long bookId, @PathVariable Long authorId) {
+    return BookDto.fromEntity(service.addBookAuthor(bookId, authorId));
+  }
+
+  @DeleteMapping("/{bookId}/authors/{authorId}")
+  public BookDto removeBookAuthor(@PathVariable Long bookId, @PathVariable Long authorId) {
+    return BookDto.fromEntity(service.removeBookAuthor(bookId, authorId));
+  }
+
 }
